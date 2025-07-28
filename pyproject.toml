@@ -1,0 +1,56 @@
+[project]
+name = "gridcast"
+version = "0.1.0"
+description = "Anomaly detection and short-term forecasting for Portugal's grid"
+authors = [
+    {name="Francisco Silva", email="francisco3597@gmail.com"},
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "ipykernel",
+    "requests",
+    "pandas",
+    "seaborn",
+    "statsmodels",
+    "loguru"
+]
+
+[project.optional-dependencies]
+dev = ["pre-commit", "pytest", "pytest-cov", "ruff", "nbqa", "pytest-mock"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+omit = [
+    "*/conftest.py", "*/test*", # omit test files
+]
+
+[tool.coverage.report]
+fail_under = 80
+
+[tool.setuptools]
+packages = ["gridcast"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+]
+
+[project.scripts]
+gridcast = "gridcast.main:main"
