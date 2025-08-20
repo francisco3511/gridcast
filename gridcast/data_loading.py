@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from datetime import timedelta
 from io import StringIO
 
 import pandas as pd
@@ -38,6 +39,7 @@ def scrape_data(start_date: str, end_date: str) -> pd.DataFrame:
         raise Exception(f"Request failed: {e}") from e
 
     df = pd.read_csv(StringIO(response.text), encoding="utf-8", sep=';', skiprows=2, header=0)
+    df = df.sort_values(by=["Data e Hora"]).reset_index(drop=True)
     return df
 
 
@@ -51,19 +53,32 @@ def update_data() -> pd.DataFrame:
         The updated data.
     """
 
-    today = dt.now().strftime("%Y-%m-%d")
+    today = dt.now() - timedelta(days=1)
+    last_date = today.strftime("%Y-%m-%d")
     filepath = RAW_DATA_DIR / "production_breakdown.csv"
 
     try:
         df = pd.read_csv(RAW_DATA_DIR / "production_breakdown.csv")
-        last_date = dt.strptime(df.iloc[-1]["Date"], "%Y-%m-%d") + dt.timedelta(days=1)
-        new_data = scrape_data(last_date, today)
+        first_date = (
+            dt.strptime(df.iloc[-1]["Data e Hora"], "%Y-%m-%d %H:%M:%S")
+            - timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+        new_data = scrape_data(first_date, last_date)
         df = pd.concat([df, new_data])
-        df = df.drop_duplicates(subset=["Date"])
+        df = df.drop_duplicates(subset=["Data e Hora"], keep="last").reset_index(drop=True)
         df.to_csv(filepath, index=False)
     except FileNotFoundError:
         logger.info("No data found, scraping new data")
-        df = scrape_data(BASE_DATE, dt.strptime(today, "%Y-%m-%d") )
+        df = scrape_data(BASE_DATE, dt.strftime(last_date, "%Y-%m-%d"))
         df.to_csv(filepath, index=False)
 
+    return df
+
+
+def load_data() -> pd.DataFrame:
+    """
+    Load the data from the CSV file.
+    """
+    df = pd.read_csv(RAW_DATA_DIR / "production_breakdown.csv", parse_dates=["Data e Hora"])
+    df["Data e Hora"] = pd.to_datetime(df["Data e Hora"])
     return df

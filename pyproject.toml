@@ -11,9 +11,11 @@ requires-python = ">=3.11"
 
 dependencies = [
     "ipykernel",
+    "nbformat>=4.2.0",
     "requests",
     "pandas",
     "seaborn",
+    "plotly",
     "statsmodels",
     "loguru"
 ]
