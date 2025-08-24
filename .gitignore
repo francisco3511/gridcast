@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+.vscode
+
 # Distribution / packaging
 .Python
 build/
@@ -206,4 +208,11 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+# Data
+data/db/*
+data/raw/*
+data/processed/*
+
 *.csv
+*.parquet
+*.db

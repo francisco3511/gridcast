@@ -1,9 +1,11 @@
-from gridcast.data_loading import update_data
+from gridcast.database_handler import update
+from gridcast.preprocess import save_hourly_data
 
 
 def main():
-    df = update_data()
-    return df
+    update()
+    save_hourly_data()
+    return
 
 
 if __name__ == "__main__":

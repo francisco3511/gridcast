@@ -16,6 +16,8 @@ dependencies = [
     "pandas",
     "seaborn",
     "plotly",
+    "pyarrow",
+    "fastparquet",
     "statsmodels",
     "loguru"
 ]
@@ -52,6 +54,7 @@ select = [
     "B",  # flake8-bugbear
 ]
 ignore = [
+    "I001"
 ]
 
 [project.scripts]

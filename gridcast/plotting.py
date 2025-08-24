@@ -21,6 +21,19 @@ COLORS = {
 }
 
 
+def plot_columns(df: pd.DataFrame, columns: list[str]) -> go.Figure:
+    """
+    Plot a list of columns in a stacked area chart.
+    """
+    fig = make_subplots(rows=1, cols=1, subplot_titles=columns)
+    for col in columns:
+        fig.add_trace(
+            go.Scatter(x=df['Data e Hora'], y=df[col], name=col, mode='lines'),
+            row=1, col=1
+        )
+    return fig
+
+
 def plot_daily_energy_stacked(df: pd.DataFrame, day: str) -> go.Figure:
     """
     Create a daily energy breakdown plot with stacked area charts
